@@ -7,6 +7,7 @@ import { Car } from './cars/cars.entity'
 import { CarsModule } from './cars/cars.module'
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { User } from './users/users.entity'
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { UsersModule } from './users/users.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [Car],
+        entities: [Car, User],
         synchronize: true,
       }),
       inject: [ConfigService],
