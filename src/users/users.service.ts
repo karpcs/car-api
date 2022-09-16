@@ -40,7 +40,6 @@ export class UsersService {
         username: true,
       }
     })
-    console.log(users)
     return users
   }
 

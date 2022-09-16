@@ -16,7 +16,6 @@ export class AuthService {
   ) { }
 
   async validateUser(username: string, password: string): Promise<Omit<User, 'password'> | null> {
-    console.log('validate')
     const user = await this.usersService.findOne(username)
     if (user && compareSync(password, user.password)) {
 
@@ -28,9 +27,7 @@ export class AuthService {
   }
 
   async register(newUser: any) {
-    console.log('register')
     const user = await this.usersService.findOne(newUser.username)
-    console.log(user)
     if (user) {
       throw new BadRequestException('username already exists')
     }

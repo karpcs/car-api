@@ -18,7 +18,6 @@ export class AuthContoller {
 
     @Post('register')
     async register(@Body() body) {
-        console.log(body)
         return this.authService.register(body)
     }
 }
