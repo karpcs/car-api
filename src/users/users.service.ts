@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository, ILike } from 'typeorm'
 import { hashSync } from 'bcryptjs'
-import { User } from './users.entity'
+import { User } from './user.entity'
 
 @Injectable()
 export class UsersService {
@@ -12,19 +12,20 @@ export class UsersService {
   ) { }
 
   async createAdmin() {
-    const adminUser = this.userRepository.create({
-      password: hashSync('admin'),
-      username: 'karolis'
-    })
-    return this.userRepository.save(adminUser)
+    const adminUser = <Omit<User, 'id'>>{ username: 'karolis', password: 'admin' }
+    return this.createUser(adminUser)
   }
 
-  async createUser(user: Omit<User, 'id'>){
+  async createUser(user: Omit<User, 'id'>) {
     const newUser = this.userRepository.create({
       username: user.username,
       password: hashSync(user.password)
     })
     return this.userRepository.save(newUser)
+  }
+
+  async updateUser(user: User){
+    return await this.userRepository.update(user.id, user)
   }
 
   async findOne(username: string): Promise<User | undefined> {
@@ -38,7 +39,10 @@ export class UsersService {
     const users = await this.userRepository.find({
       select: {
         username: true,
-      }
+      },
+      relations: {
+        userInfo: false
+      },
     })
     return users
   }

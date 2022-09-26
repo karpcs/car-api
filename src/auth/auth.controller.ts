@@ -1,7 +1,8 @@
 import { Body, Controller, Post, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { User } from "src/users/users.entity";
+import { User } from "src/users/user.entity";
 import { AuthService } from "./auth.service";
+import { LocalAuthGuard } from "./local.strategy";
 
 type LocalStretegyRequest = Request & { user: Omit<User, 'password'> }
 
@@ -9,7 +10,7 @@ type LocalStretegyRequest = Request & { user: Omit<User, 'password'> }
 export class AuthContoller {
     constructor(private authService: AuthService) { }
 
-    @UseGuards(AuthGuard('local'))
+    @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Req() req: LocalStretegyRequest) {
         console.log(req.user)

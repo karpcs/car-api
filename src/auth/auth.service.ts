@@ -2,7 +2,8 @@ import { Injectable, BadRequestException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { compareSync } from 'bcryptjs'
 import { UsersService } from 'src/users/users.service'
-import { User } from 'src/users/users.entity'
+import { User } from 'src/users/user.entity'
+import { NewUser } from 'src/users/users.types'
 
 export const jwtConstants = {
   secret: 'secretKey',
@@ -26,7 +27,7 @@ export class AuthService {
     return null
   }
 
-  async register(newUser: any) {
+  async register(newUser: NewUser) {
     const user = await this.usersService.findOne(newUser.username)
     if (user) {
       throw new BadRequestException('username already exists')
@@ -35,7 +36,7 @@ export class AuthService {
     if (newUser.password !== newUser.repeatPassword) {
       throw new BadRequestException('password does not match')
     }
-    return this.usersService.createUser(newUser)
+    return this.usersService.createUser({ username: newUser.username, password: newUser.password, userInfo: null })
 
   }
 
